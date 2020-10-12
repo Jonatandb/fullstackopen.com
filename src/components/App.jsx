@@ -11,6 +11,11 @@ const anecdotes = [
 
 const randomQuoteIndexNumber = () => Math.floor(Math.random() * anecdotes.length)
 
+const Anecdote = ({ text, votes }) => <div>
+    <p>{text}</p>
+    <p>has {votes} votes</p>
+</div>
+
 const App = () => {
     const [selected, setSelected] = useState(0)
     const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
@@ -21,14 +26,20 @@ const App = () => {
         setVotes(copyVotes)
     }
 
+    const sortedVotes = [...votes].sort((a, b) => a - b)
+    const higherVote = sortedVotes[votes.length - 1]
+    const mostVoted = votes.findIndex(v => v === higherVote)
+
+    // Simplified:  const mostVoted = votes.findIndex(v => v === [...votes].sort((a, b) => a - b)[votes.length - 1])
+
     return (
         <>
-            <div>
-                <p>{anecdotes[selected]}</p>
-                <p>has {votes[selected]} votes</p>
-            </div>
+            <h1>Anecdote of the day</h1>
+            <Anecdote text={anecdotes[selected]} votes={votes[selected]} />
             <button onClick={increaseVoteCount}>vote</button>
             <button onClick={() => setSelected(randomQuoteIndexNumber())}>next anecdote</button>
+            <h1>Anecdote with most votes</h1>
+            <Anecdote text={anecdotes[mostVoted]} votes={votes[mostVoted]} />
         </>
     )
 }
