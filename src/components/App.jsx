@@ -4,14 +4,18 @@ const Statistics = ({ good, neutral, bad }) => {
     const all = good + neutral + bad
     const average = all / 3
     const positivePercent = (good * 100 / all) || 0
-    return <>
-        <h1>statistics</h1>
+    const content = <>
         <div>good {good}</div>
         <div>neutral {neutral}</div>
         <div>bad {bad}</div>
         <div>all {all}</div>
         <div>average {average}</div>
         <div>positive {positivePercent} %</div>
+    </>
+
+    return <>
+        <h1>statistics</h1>
+        { all > 0 ? content : <h3>No feedback given</h3>}
     </>
 }
 
