@@ -12,14 +12,24 @@ const anecdotes = [
 const randomQuoteIndexNumber = () => Math.floor(Math.random() * anecdotes.length)
 
 const App = () => {
-    const [selected, setSelected] = useState(randomQuoteIndexNumber())
+    const [selected, setSelected] = useState(0)
+    const [votes, setVotes] = useState(new Uint8Array(anecdotes.length))
 
-    return (<>
-        <div>
-            {anecdotes[selected]}
-        </div>
-        <button onClick={() => setSelected(randomQuoteIndexNumber())}>next anecdote</button>
-    </>
+    const increaseVoteCount = () => {
+        const copyVotes = [...votes]
+        copyVotes[selected]++
+        setVotes(copyVotes)
+    }
+
+    return (
+        <>
+            <div>
+                <p>{anecdotes[selected]}</p>
+                <p>has {votes[selected]} votes</p>
+            </div>
+            <button onClick={increaseVoteCount}>vote</button>
+            <button onClick={() => setSelected(randomQuoteIndexNumber())}>next anecdote</button>
+        </>
     )
 }
 
