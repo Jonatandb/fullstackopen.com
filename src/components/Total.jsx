@@ -1,5 +1,5 @@
 import React from 'react'
 
-const Total = ({ parts }) => <p>Number of exercises {parts.reduce((total, part) => total += part.exercises, 0)}</p>
+const Total = ({ course: { parts } }) => <p>Number of exercises {parts.reduce((total, part) => total += part.exercises, 0)}</p>
 
 export default Total
