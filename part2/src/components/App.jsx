@@ -1,59 +1,48 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import PersonForm from './phonebook/PersonForm'
-import Persons from './phonebook/Persons'
-import Filter from './phonebook/Filter'
+import Country from './countries/Country'
 
-const App = () => {
-    const [persons, setPersons] = useState([])
+function App() {
+    const [countries, setCountries] = useState([])
+    const [searchText, setSearchText] = useState('')
 
-    const [newName, setNewName] = useState('')
-    const [newNumber, setNewNumber] = useState('')
-    const [filterText, setFilterText] = useState('')
-
-    const handleChangeName = evt => setNewName(evt.target.value)
-    const handleChangeNumber = evt => setNewNumber(evt.target.value)
-    const handleChangeFilter = evt => setFilterText(evt.target.value)
-
-    const handleSubmit = evt => {
-        evt.preventDefault()
-        if (persons.map(p => p.name).includes(newName)) {
-            alert(`${newName} is already added to phonebook`)
-        } else {
-            setPersons([...persons, { name: newName, number: newNumber }])
-            setNewName('')
-            setNewNumber('')
-        }
+    const handleChange = evt => {
+        setSearchText(evt.target.value)
     }
 
     useEffect(() => {
         axios
-            .get('http://localhost:3001/persons')
+            .get('https://restcountries.eu/rest/v2/all')
             .then(response => {
                 const data = response.data
-                setPersons(data)
+                setCountries(data)
             })
     }, [])
 
-    let filteredPersons = persons
+    let filteredCountries = []
 
-    if (filterText.trim().length > 0) {
-        filteredPersons = persons.filter(p => p.name.toLowerCase().includes(filterText.toLowerCase()))
+    let result = ''
+
+    if (searchText.length > 0) {
+        filteredCountries = countries.filter(c => {
+            return c.name.toLowerCase().includes(searchText.toLowerCase())
+        })
+        if (filteredCountries.length > 10) {
+            result = <div>Too many matches, specify another filter</div>
+        }
+        else if (filteredCountries.length > 1) {
+            result = filteredCountries.map(c => <div key={c.name}>{c.name}</div>)
+        }
+        else if (filteredCountries.length === 1) {
+            const country = filteredCountries[0]
+            result = <Country country={country} />
+        }
     }
 
     return (
         <div>
-            <h2>Phonebook</h2>
-
-            <Filter handleChangeFilter={handleChangeFilter} />
-
-            <h3>Add a new</h3>
-
-            <PersonForm handleSubmit={handleSubmit} handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} newName={newName} newNumber={newNumber} />
-
-            <h3>Numbers</h3>
-
-            <Persons persons={filteredPersons} />
+            find countries <input onChange={handleChange} />
+            {result}
         </div>
     )
 }
