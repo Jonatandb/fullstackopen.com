@@ -5,9 +5,11 @@ import Country from './countries/Country'
 function App() {
     const [countries, setCountries] = useState([])
     const [searchText, setSearchText] = useState('')
+    const [selectedCountry, setSelectedCountry] = useState(null)
 
     const handleChange = evt => {
         setSearchText(evt.target.value)
+        setSelectedCountry(null)
     }
 
     useEffect(() => {
@@ -31,7 +33,14 @@ function App() {
             result = <div>Too many matches, specify another filter</div>
         }
         else if (filteredCountries.length > 1) {
-            result = filteredCountries.map(c => <div key={c.name}>{c.name}</div>)
+            const handleShowCountry = country => {
+                selectedCountry && country === selectedCountry ? setSelectedCountry(null) : setSelectedCountry(country)
+            }
+
+            result = filteredCountries.map(c => {
+                const buttonText = selectedCountry && c.name === selectedCountry.name ? 'Hide' : 'Show'
+                return <div key={c.name}>{c.name}<button onClick={() => handleShowCountry(c)}>{buttonText}</button></div>
+            })
         }
         else if (filteredCountries.length === 1) {
             const country = filteredCountries[0]
@@ -43,6 +52,7 @@ function App() {
         <div>
             find countries <input onChange={handleChange} />
             {result}
+            {selectedCountry ? <Country country={selectedCountry} /> : null}
         </div>
     )
 }
