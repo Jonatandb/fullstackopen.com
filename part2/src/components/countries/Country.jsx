@@ -1,4 +1,5 @@
 import React from 'react'
+import Weather from './Weather'
 
 const Country = ({ country }) => <div>
     <h1>{country.name}</h1>
@@ -9,6 +10,7 @@ const Country = ({ country }) => <div>
         {country.languages.map(l => <li key={l.name}>{l.name}</li>)}
     </ul>
     <img src={country.flag} alt={`${country.name} flag`} style={{ width: '100px' }} />
+    <Weather country={country} />
 </div>
 
 export default Country
