@@ -1,6 +1,6 @@
 import React from 'react'
-import Countries from './countries'
+import Courses from './courses'
 
-const App = () => <Countries />
-
-export default App
+export default function App() {
+    return <Courses />
+}
