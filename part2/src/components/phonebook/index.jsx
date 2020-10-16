@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
 import Filter from './Filter'
+import personsService from './services/personsService'
 
 const Phonebook = () => {
     const [persons, setPersons] = useState([])
@@ -20,18 +20,28 @@ const Phonebook = () => {
         if (persons.map(p => p.name).includes(newName)) {
             alert(`${newName} is already added to phonebook`)
         } else {
-            setPersons([...persons, { name: newName, number: newNumber }])
-            setNewName('')
-            setNewNumber('')
+            const newPerson = { name: newName, number: newNumber }
+            personsService
+                .create(newPerson)
+                .then(data => {
+                    setPersons(persons.concat(data))
+                    setNewName('')
+                    setNewNumber('')
+                })
+                .catch(e => {
+                    alert(`No se pudo conectar con el servicio de personas: ${e}`)
+                })
         }
     }
 
     useEffect(() => {
-        axios
-            .get('http://localhost:3001/persons')
-            .then(response => {
-                const data = response.data
-                setPersons(data)
+        personsService
+            .getAll()
+            .then(initialData => {
+                setPersons(initialData)
+            })
+            .catch(e => {
+                alert(`No se pudo conectar con el servicio de personas: ${e}`)
             })
     }, [])
 
