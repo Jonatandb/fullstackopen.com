@@ -30,20 +30,39 @@ const Phonebook = () => {
                     setNewNumber('')
                 })
                 .catch(e => {
-                    alert(`No se pudo conectar con el servicio de personas: ${e}`)
+                    alert(`No se pudo agregar: ${e}`)
                 })
         }
     }
 
-    useEffect(() => {
+    const handleDelete = id => {
+        const person = persons.find(p => p.id === id)
+        const result = window.confirm(`Delete ${person.name}?`)
+        if (result) {
+            personsService
+                .remove(id)
+                .then(response => {
+                    getData()
+                })
+                .catch(e => {
+                    alert(`No se pudo eliminar: ${e} `)
+                })
+        }
+    }
+
+    const getData = () => {
         personsService
             .getAll()
             .then(initialData => {
                 setPersons(initialData)
             })
             .catch(e => {
-                alert(`No se pudo conectar con el servicio de personas: ${e}`)
+                alert(`No se pudo conectar con el servicio de personas: ${e} `)
             })
+    }
+
+    useEffect(() => {
+        getData()
     }, [])
 
     let filteredPersons = persons
@@ -64,7 +83,7 @@ const Phonebook = () => {
 
             <h3>Numbers</h3>
 
-            <Persons persons={filteredPersons} />
+            <Persons persons={filteredPersons} handleDelete={handleDelete} />
         </div>
     )
 }
