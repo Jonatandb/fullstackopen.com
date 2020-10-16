@@ -44,7 +44,15 @@ const Phonebook = () => {
                     getData()
                 })
                 .catch(e => {
-                    alert(`Error deleting: ${e} `)
+                    if (e.response.status === 404) {
+                        setNotification({ message: `Information of ${person.name} has already been removed from server`, error: true })
+                        setPersons(persons.filter(p => p.id !== id ? p : null))
+                    } else {
+                        setNotification({ message: `Error deleting: ${e}`, error: true })
+                    }
+                    setTimeout(() => {
+                        setNotification(null)
+                    }, 5000);
                 })
         }
     }
@@ -56,7 +64,10 @@ const Phonebook = () => {
                 setPersons(initialData)
             })
             .catch(e => {
-                alert(`Error connecting to service: ${e} `)
+                setNotification({ message: `Error connecting to service: ${e}`, error: true })
+                setTimeout(() => {
+                    setNotification(null)
+                }, 5000);
             })
     }
 
@@ -68,13 +79,16 @@ const Phonebook = () => {
                 setPersons(persons.concat(returnedPerson))
                 setNewName('')
                 setNewNumber('')
-                setNotification(`Added ${returnedPerson.name}`)
+                setNotification({ message: `Added ${returnedPerson.name}`, error: false })
                 setTimeout(() => {
                     setNotification(null)
-                }, 2000);
+                }, 5000);
             })
             .catch(e => {
-                alert(`Error adding: ${e}`)
+                setNotification({ message: `Error adding: ${e}`, error: true })
+                setTimeout(() => {
+                    setNotification(null)
+                }, 5000);
             })
     }
 
@@ -89,13 +103,16 @@ const Phonebook = () => {
                 setPersons(persons.map(p => p.id !== updatedPerson.id ? p : updatedPerson))
                 setNewName('')
                 setNewNumber('')
-                setNotification(`Updated ${updatedPerson.name}`)
+                setNotification({ message: `Updated ${updatedPerson.name}`, error: false })
                 setTimeout(() => {
                     setNotification(null)
-                }, 2000);
+                }, 5000);
             })
             .catch(e => {
-                alert(`Error updating: ${e}`)
+                setNotification({ message: `Error updating: ${e}`, error: true })
+                setTimeout(() => {
+                    setNotification(null)
+                }, 5000);
             })
     }
 

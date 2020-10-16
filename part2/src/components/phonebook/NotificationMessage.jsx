@@ -1,20 +1,23 @@
 import React from 'react'
 
 const NotificationMessage = ({ message }) => {
-    const styles = {
-        border: '5px solid green',
-        color: 'green',
+
+    if (message === null) return null
+
+    const color = message.error ? 'red' : 'green'
+
+    const style = {
+        border: `5px solid ${color}`,
+        color,
         backgroundColor: '#ccc',
         margin: 5,
         padding: 10,
         borderRadius: 5
     }
 
-    if (message === null) return null
-
     return (
-        <div style={styles}>
-            {message}
+        <div style={style}>
+            {message.message}
         </div>
     )
 }
