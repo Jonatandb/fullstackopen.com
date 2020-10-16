@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
 import Filter from './Filter'
+import NotificationMessage from './NotificationMessage'
 
 import personsService from './services/personsService'
 
 const Phonebook = () => {
     const [persons, setPersons] = useState([])
-
+    const [notification, setNotification] = useState(null)
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filterText, setFilterText] = useState('')
@@ -67,6 +68,10 @@ const Phonebook = () => {
                 setPersons(persons.concat(returnedPerson))
                 setNewName('')
                 setNewNumber('')
+                setNotification(`Added ${returnedPerson.name}`)
+                setTimeout(() => {
+                    setNotification(null)
+                }, 2000);
             })
             .catch(e => {
                 alert(`Error adding: ${e}`)
@@ -84,6 +89,10 @@ const Phonebook = () => {
                 setPersons(persons.map(p => p.id !== updatedPerson.id ? p : updatedPerson))
                 setNewName('')
                 setNewNumber('')
+                setNotification(`Updated ${updatedPerson.name}`)
+                setTimeout(() => {
+                    setNotification(null)
+                }, 2000);
             })
             .catch(e => {
                 alert(`Error updating: ${e}`)
@@ -103,6 +112,8 @@ const Phonebook = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+
+            <NotificationMessage message={notification} />
 
             <Filter handleChangeFilter={handleChangeFilter} />
 
