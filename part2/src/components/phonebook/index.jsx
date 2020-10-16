@@ -18,20 +18,18 @@ const Phonebook = () => {
 
     const handleSubmit = evt => {
         evt.preventDefault()
-        if (persons.map(p => p.name).includes(newName)) {
-            alert(`${newName} is already added to phonebook`)
+
+        if (newName.trim().length === 0) return
+
+        const person = persons.find(p => p.name === newName)
+
+        if (person) {
+            const result = window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)
+            if (result) {
+                updatePerson(person)
+            }
         } else {
-            const newPerson = { name: newName, number: newNumber }
-            personsService
-                .create(newPerson)
-                .then(data => {
-                    setPersons(persons.concat(data))
-                    setNewName('')
-                    setNewNumber('')
-                })
-                .catch(e => {
-                    alert(`No se pudo agregar: ${e}`)
-                })
+            addNewPerson()
         }
     }
 
@@ -45,7 +43,7 @@ const Phonebook = () => {
                     getData()
                 })
                 .catch(e => {
-                    alert(`No se pudo eliminar: ${e} `)
+                    alert(`Error deleting: ${e} `)
                 })
         }
     }
@@ -57,7 +55,38 @@ const Phonebook = () => {
                 setPersons(initialData)
             })
             .catch(e => {
-                alert(`No se pudo conectar con el servicio de personas: ${e} `)
+                alert(`Error connecting to service: ${e} `)
+            })
+    }
+
+    const addNewPerson = () => {
+        const newPerson = { name: newName, number: newNumber }
+        personsService
+            .create(newPerson)
+            .then(returnedPerson => {
+                setPersons(persons.concat(returnedPerson))
+                setNewName('')
+                setNewNumber('')
+            })
+            .catch(e => {
+                alert(`Error adding: ${e}`)
+            })
+    }
+
+    const updatePerson = person => {
+        const updatedPerson = {
+            ...person,
+            number: newNumber
+        }
+        personsService
+            .update(updatedPerson)
+            .then(response => {
+                setPersons(persons.map(p => p.id !== updatedPerson.id ? p : updatedPerson))
+                setNewName('')
+                setNewNumber('')
+            })
+            .catch(e => {
+                alert(`Error updating: ${e}`)
             })
     }
 
