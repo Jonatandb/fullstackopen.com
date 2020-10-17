@@ -35,6 +35,16 @@ app.get('/', (request, response) => {
     response.send('<h1>Hello from Phonebook backend!</h1>')
 })
 
+app.get('/info', (request, response) => {
+    const personsCount = persons.length
+    const requestDate = new Date()
+    const content = `<div>
+    <p>Phonebook has info for ${personsCount} people</p>
+    <p>${requestDate}</p>
+</div>`
+    response.send(content)
+})
+
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
