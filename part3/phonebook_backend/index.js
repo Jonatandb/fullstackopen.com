@@ -7,27 +7,27 @@ let persons = [
     {
         id: 1,
         name: "Arto Hellas",
-        numer: "040-123456"
+        number: "040-123456"
     },
     {
         id: 2,
         name: "Ada Lovelace",
-        numer: "39-44-5325523"
+        number: "39-44-5325523"
     },
     {
         id: 3,
         name: "Dan Abramov",
-        numer: "12-43-234345"
+        number: "12-43-234345"
     },
     {
         id: 4,
         name: "Mary Poppendick",
-        numer: "39-23-6423122"
+        number: "39-23-6423122"
     },
     {
         id: 5,
         name: "Jonatandb",
-        numer: "34-58-0010"
+        number: "34-58-0010"
     }
 ]
 
@@ -63,6 +63,22 @@ app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     persons = persons.filter(person => person.id !== id)
     response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+    //console.log('get headers:', request.headers) // Always should exists: 'content-type': 'application/json'
+
+    const { name, number } = request.body
+
+    const person = {
+        id: Math.round(Math.random() * 10000),
+        name: name,
+        number: number
+    }
+
+    persons = persons.concat(person)
+
+    response.json(person)
 })
 
 const PORT = 3001
