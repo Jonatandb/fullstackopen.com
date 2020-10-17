@@ -1,0 +1,45 @@
+const express = require('express');
+const app = express()
+
+app.use(express.json())
+
+let persons = [
+    {
+        id: 1,
+        name: "Arto Hellas",
+        numer: "040-123456"
+    },
+    {
+        id: 2,
+        name: "Ada Lovelace",
+        numer: "39-44-5325523"
+    },
+    {
+        id: 3,
+        name: "Dan Abramov",
+        numer: "12-43-234345"
+    },
+    {
+        id: 4,
+        name: "Mary Poppendick",
+        numer: "39-23-6423122"
+    },
+    {
+        id: 5,
+        name: "Jonatandb",
+        numer: "34-58-0010"
+    }
+]
+
+app.get('/', (request, response) => {
+    response.send('<h1>Hello from Phonebook backend!</h1>')
+})
+
+app.get('/api/persons', (request, response) => {
+    response.json(persons)
+})
+
+const PORT = 3001
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+})
