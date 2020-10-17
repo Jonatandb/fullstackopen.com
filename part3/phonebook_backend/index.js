@@ -70,10 +70,30 @@ app.post('/api/persons', (request, response) => {
 
     const { name, number } = request.body
 
+    if (!name || name.trim().length === 0) {
+        return response.status(404).json({
+            error: 'name missing'
+        })
+    }
+
+    if (!number || number.trim().length === 0) {
+        return response.status(404).json({
+            error: 'number missing'
+        })
+    }
+
+    const nameExists = persons.map(p => p.name).find(n => n.trim() === name.trim())
+
+    if (nameExists) {
+        return response.status(404).json({
+            error: 'name must be unique'
+        })
+    }
+
     const person = {
         id: Math.round(Math.random() * 10000),
-        name: name,
-        number: number
+        name,
+        number
     }
 
     persons = persons.concat(person)
