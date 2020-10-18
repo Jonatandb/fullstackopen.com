@@ -1,0 +1,7 @@
+POST http://phonebook-jonatandb.herokuapp.com/api/persons/
+Content-Type: application/json
+
+{
+    "name": "Jonatandb V2!",
+    "number": "34-58-0010"
+}
