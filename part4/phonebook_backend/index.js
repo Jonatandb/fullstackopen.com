@@ -105,26 +105,19 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    const nameExists = persons.map(p => p.name).find(n => n.trim() === name.trim())
-
-    if (nameExists) {
-        return response.status(404).json({
-            error: 'name must be unique'
-        })
-    }
-
-    const person = {
-        id: Math.round(Math.random() * 10000),
+    const person = new Person({
         name,
         number
-    }
+    })
 
-    persons = persons.concat(person)
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 
-    response.json(person)
 })
 
 const PORT = process.env.PORT || 3001
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
