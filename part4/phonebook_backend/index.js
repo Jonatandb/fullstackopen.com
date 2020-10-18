@@ -6,6 +6,14 @@ const Person = require('./models/person')
 
 const app = express()
 
+const errorHandler = (error, request, response, next) => {
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+    next(error)
+}
+
+app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
 app.use(morgan(function (tokens, req, res) {
@@ -22,7 +30,6 @@ app.use(morgan(function (tokens, req, res) {
     result = result.join(' ')
     return result
 }))
-app.use(express.static('build'))
 
 let persons = [
     {
@@ -66,10 +73,12 @@ app.get('/info', (request, response) => {
     response.send(content)
 })
 
-app.get('/api/persons', (request, response) => {
-    Person.find({}).then(persons => {
-        response.json(persons)
-    })
+app.get('/api/persons', (request, response, next) => {
+    Person.find({})
+        .then(persons => {
+            response.json(persons)
+        })
+        .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -82,7 +91,7 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
         .then(result => {
             response.status(204).end()
@@ -90,7 +99,7 @@ app.delete('/api/persons/:id', (request, response) => {
         .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     //console.log('get headers:', request.headers) // Always should exists: 'content-type': 'application/json'
 
     const { name, number } = request.body
@@ -112,11 +121,15 @@ app.post('/api/persons', (request, response) => {
         number
     })
 
-    person.save().then(savedPerson => {
-        response.json(savedPerson)
-    })
+    person.save()
+        .then(savedPerson => {
+            response.json(savedPerson)
+        })
+        .catch(error => next(error))
 
 })
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 
