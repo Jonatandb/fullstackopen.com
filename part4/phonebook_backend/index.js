@@ -1,6 +1,6 @@
 require('dotenv').config()
-const express = require('express');
-const cors = require('cors'); 'cors'
+const express = require('express')
+const cors = require('cors')
 const morgan = require('morgan')
 const Person = require('./models/person')
 
@@ -31,64 +31,40 @@ app.use(morgan(function (tokens, req, res) {
     return result
 }))
 
-let persons = [
-    {
-        id: 1,
-        name: "Arto Hellas",
-        number: "040-123456"
-    },
-    {
-        id: 2,
-        name: "Ada Lovelace",
-        number: "39-44-5325523"
-    },
-    {
-        id: 3,
-        name: "Dan Abramov",
-        number: "12-43-234345"
-    },
-    {
-        id: 4,
-        name: "Mary Poppendick",
-        number: "39-23-6423122"
-    },
-    {
-        id: 5,
-        name: "Jonatandb",
-        number: "34-58-0010"
-    }
-]
-
 app.get('/', (request, response) => {
     response.send('<h1>Hello from Phonebook backend!</h1>')
 })
 
-app.get('/info', (request, response) => {
-    const personsCount = persons.length
-    const requestDate = new Date()
-    const content = `<div>
-    <p>Phonebook has info for ${personsCount} people</p>
-    <p>${requestDate}</p>
-</div>`
-    response.send(content)
+app.get('/info', (request, response, next) => {
+    Person.find({})
+        .then(persons => {
+            const personsCount = persons.length
+            const requestDate = new Date()
+            const content = `<div>
+            <p>Phonebook has info for ${personsCount} people</p>
+            <p>${requestDate}</p>
+            </div>`
+            response.send(content)
+        })
+        .catch(error => next(error))
+
 })
 
 app.get('/api/persons', (request, response, next) => {
     Person.find({})
-        .then(persons => {
-            response.json(persons)
-        })
+        .then(persons => response.json(persons))
         .catch(error => next(error))
 })
 
-app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-    if (person) {
-        response.json(person)
-    } else {
-        response.status(404).end()
-    }
+app.get('/api/persons/:id', (request, response, next) => {
+    Person.findById(request.params.id)
+        .then(person => {
+            if (person) {
+                return response.json(person)
+            }
+            return response.status(404).end()
+        })
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -117,8 +93,8 @@ app.post('/api/persons', (request, response, next) => {
     }
 
     const person = new Person({
-        name,
-        number
+        name: name.trim(),
+        number: number.trim()
     })
 
     person.save()
@@ -135,8 +111,8 @@ app.put('/api/persons/:id', (request, response, next) => {
     const { id } = request.params
 
     const person = {
-        name,
-        number
+        name: name.trim(),
+        number: number.trim()
     }
 
     Person.findByIdAndUpdate(id, person)

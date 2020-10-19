@@ -22,10 +22,10 @@ const App = () => {
 
         if (newName.trim().length === 0) return
 
-        const person = persons.find(p => p.name === newName)
+        const person = persons.find(p => p.name.trim() === newName.trim())
 
         if (person) {
-            const result = window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)
+            const result = window.confirm(`${person.name}'s is already added to phonebook, replace the old number with a new one?`)
             if (result) {
                 updatePerson(person)
             }
