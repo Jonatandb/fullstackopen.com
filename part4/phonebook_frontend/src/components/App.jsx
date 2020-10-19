@@ -128,7 +128,7 @@ const App = () => {
 
     return (
         <div>
-            <h2>Phonebook</h2>
+            <h2>Phonebook by <a href="https://www.github.com/jonatandb" target="_blank" rel="noopener noreferrer">Jonatandb</a></h2>
 
             <NotificationMessage message={notification} />
 
@@ -141,6 +141,8 @@ const App = () => {
             <h3>Numbers</h3>
 
             <Persons persons={filteredPersons} handleDelete={handleDelete} />
+
+            <h5>Thanks to <a href="https://fullstackopen.com/en" target="_blank" rel="noopener noreferrer">Full stack open 2020</a></h5>
         </div>
     )
 }
