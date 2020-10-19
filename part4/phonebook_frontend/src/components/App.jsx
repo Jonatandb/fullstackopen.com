@@ -85,10 +85,17 @@ const App = () => {
                 }, 5000);
             })
             .catch(e => {
-                setNotification({ message: `Error adding: ${e}`, error: true })
-                setTimeout(() => {
-                    setNotification(null)
-                }, 5000);
+                if (e.response.status === 400) {
+                    setNotification({ message: `Error adding: ${e.response.data.error}`, error: true })
+                    setTimeout(() => {
+                        setNotification(null)
+                    }, 5000);
+                } else {
+                    setNotification({ message: `Error adding: ${e.message}`, error: true })
+                    setTimeout(() => {
+                        setNotification(null)
+                    }, 5000);
+                }
             })
     }
 
@@ -109,10 +116,17 @@ const App = () => {
                 }, 5000);
             })
             .catch(e => {
-                setNotification({ message: `Error updating: ${e}`, error: true })
-                setTimeout(() => {
-                    setNotification(null)
-                }, 5000);
+                if (e.response.status === 400) {
+                    setNotification({ message: `Error adding: ${e.response.data.error}`, error: true })
+                    setTimeout(() => {
+                        setNotification(null)
+                    }, 5000);
+                } else {
+                    setNotification({ message: `Error adding: ${e.message}`, error: true })
+                    setTimeout(() => {
+                        setNotification(null)
+                    }, 5000);
+                }
             })
     }
 
