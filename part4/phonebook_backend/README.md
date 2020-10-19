@@ -16,9 +16,9 @@ Full deploy:
 
 ---
 
-Important to run after first deploy:
+We defined the environment variables for development in file .env, but the environment variable that defines the database URL in production should be set to Heroku with:
 
-    heroku config:set MONGODB_URI="mongodb+srv://user:pass......"
+    heroku config:set MONGODB_URI="mongodb+srv://user:pass..."
 
 ---
 
@@ -28,7 +28,7 @@ Logs:
 
 ---
 
-Available routes:
+Available endpoints:
 
 GET
 
