@@ -1,5 +1,6 @@
 const dummy = require('../utils/list_helpers').dummy
 const totalLikes = require('../utils/list_helpers').totalLikes
+const favoriteBlog = require('../utils/list_helpers').favoriteBlog
 
 test('dummy returns one', () => {
     const blogs = []
@@ -22,5 +23,26 @@ describe('total likes', () => {
     test('when list has only one blog, equals the likes of that', () => {
         const result = totalLikes(listWithOneBlog)
         expect(result).toBe(5)
+    })
+})
+
+describe('favoriteBlog', () => {
+    test('returns blog with most likes', () => {
+        const blogs = [
+            {
+                title: "Full Stack Open 2020",
+                author: "Jonatandb",
+                likes: 12
+            },
+            {
+                title: "Canonical string reduction",
+                author: "Edsger W. Dijkstra",
+                likes: 2
+            }
+        ]
+
+        const result = favoriteBlog(blogs)
+        const expected = blogs[0]
+        expect(result).toEqual(expected)
     })
 })
