@@ -4,6 +4,7 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 const blogsRouter = require('./controllers/blogs')
+const errorHandler = require('./utils/errorHandler')
 const cors = require('cors')
 
 logger.info('Connecting to', config.MONGODB_URI)
@@ -20,5 +21,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/blogs', blogsRouter)
+
+app.use(errorHandler)
 
 module.exports = app

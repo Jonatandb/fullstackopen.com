@@ -74,6 +74,16 @@ test('new blog with missing "likes" property, is created with default value "0"'
     expect(blogExistsInDB.likes).toBe(0)
 })
 
+test('creation attempt of new blog without title and url return bad request status (400)', async () => {
+    const newBlog = {
+        author: "Jonatandb",
+        likes: 1400
+    }
+
+    const response = await api.post('/api/blogs').send(newBlog)
+    expect(response.status).toBe(400)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
