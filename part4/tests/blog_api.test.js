@@ -61,6 +61,19 @@ test('new blog is created correctly', async () => {
     expect(blogExistsInDB).toBeDefined()
 })
 
+test('new blog with missing "likes" property, is created with default value "0"', async () => {
+    const newBlog = {
+        title: "Full Stack Open 2020",
+        author: "Jonatandb",
+        url: "github.com/Jonatandb"
+    }
+
+    const response = await api.post('/api/blogs').send(newBlog)
+    expect(response.body.likes).toBeDefined()
+    const blogExistsInDB = await Blog.findById(response.body.id)
+    expect(blogExistsInDB.likes).toBe(0)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
