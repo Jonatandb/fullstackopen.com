@@ -1,6 +1,7 @@
 const dummy = require('../utils/list_helpers').dummy
 const totalLikes = require('../utils/list_helpers').totalLikes
 const favoriteBlog = require('../utils/list_helpers').favoriteBlog
+const mostBlogs = require('../utils/list_helpers').mostBlogs
 
 test('dummy returns one', () => {
     const blogs = []
@@ -44,5 +45,25 @@ describe('favoriteBlog', () => {
         const result = favoriteBlog(blogs)
         const expected = blogs[0]
         expect(result).toEqual(expected)
+    })
+})
+
+describe('mostBlogs', () => {
+    test('return the author with the most blogs', () => {
+        const blogs = [
+            { author: 'Ada Lovelace', title: 'Wikipedia Page' },
+            { author: 'Jonatandb', title: 'Full Stack' },
+            { author: 'Jonatandb', title: 'Open 2020' },
+            { author: 'Dan Abramov', title: 'The WET Codebase' },
+            { author: 'Dan Abramov', title: 'Goodbye, Clean Code' },
+            { author: 'Dan Abramov', title: 'My Decade in Review' }
+        ]
+
+        const expected = { author: 'Dan Abramov', blogs: 3 }
+
+        const result = mostBlogs(blogs)
+
+        expect(result).toEqual(expected)
+
     })
 })
