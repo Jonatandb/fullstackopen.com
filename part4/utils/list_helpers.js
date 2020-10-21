@@ -12,7 +12,7 @@ const favoriteBlog = blogs => {
 }
 
 // Receives an array of blogs as a parameter.
-// Returns the author who has the largest amount of blogs.
+// Returns the author who has the largest amount of blogs:
 // {
 //     author: "Robert C. Martin",
 //     blogs: 3
@@ -42,9 +42,41 @@ const mostBlogs = blogs => {
     return authorSortedList[0]
 }
 
+// Receives an array of blogs as its parameter.
+// Returns the author, whose blog posts have the largest amount of likes.
+// The return value also contains the total number of likes that the author has received:
+// {
+//     author: "Robert C. Martin",
+//     likes: 33
+// }
+const mostLikes = blogs => {
+
+    const mostLikesByAuthor = (result, author) => {
+
+        const authorFounded = result.find(a => a.author === author.author)
+
+        if (authorFounded) {
+            authorFounded.likes += author.likes
+            return result
+
+        } else {
+
+            result.push({ author: author.author, likes: author.likes })
+            return result
+        }
+    }
+
+    const authorList = blogs.reduce(mostLikesByAuthor, [])
+
+    const authorSortedList = [...authorList].sort((a, b) => a.likes > b.likes ? -1 : 1)
+
+    return authorSortedList[0]
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }

@@ -2,6 +2,7 @@ const dummy = require('../utils/list_helpers').dummy
 const totalLikes = require('../utils/list_helpers').totalLikes
 const favoriteBlog = require('../utils/list_helpers').favoriteBlog
 const mostBlogs = require('../utils/list_helpers').mostBlogs
+const mostLikes = require('../utils/list_helpers').mostLikes
 
 test('dummy returns one', () => {
     const blogs = []
@@ -62,6 +63,26 @@ describe('mostBlogs', () => {
         const expected = { author: 'Dan Abramov', blogs: 3 }
 
         const result = mostBlogs(blogs)
+
+        expect(result).toEqual(expected)
+
+    })
+})
+
+describe('mostLikes', () => {
+    test('returns the author, whose blog posts have the largest amount of likes', () => {
+        const blogs = [
+            { author: 'Ada Lovelace', title: 'Wikipedia Page', likes: 20 },
+            { author: 'Dan Abramov', title: 'The WET Codebase', likes: 20 },
+            { author: 'Dan Abramov', title: 'Goodbye, Clean Code', likes: 20 },
+            { author: 'Dan Abramov', title: 'My Decade in Review', likes: 20 },
+            { author: 'Jonatandb', title: 'Full Stack', likes: 20 },
+            { author: 'Jonatandb', title: 'Open 2020', likes: 20 }
+        ]
+
+        const expected = { author: 'Dan Abramov', likes: 60 }
+
+        const result = mostLikes(blogs)
 
         expect(result).toEqual(expected)
 
