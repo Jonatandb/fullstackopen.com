@@ -1,4 +1,11 @@
-POST http://localhost:3003/api/blogs
+@API_URL = http://localhost:3003/api/blogs
+
+### List blogs
+GET {{API_URL}}
+
+
+### Add new blog
+POST {{API_URL}}
 Content-Type: application/json
 
 {
