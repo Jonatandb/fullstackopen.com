@@ -1,0 +1,14 @@
+@API_URL = http://localhost:3003/api/users
+
+### List users
+GET {{API_URL}}
+
+### Add new user
+POST {{API_URL}}
+Content-Type: application/json
+
+{
+    "username":"Jonatandb",
+    "name":"Jonatan",
+    "password": "FullStackOpen2020"
+}
