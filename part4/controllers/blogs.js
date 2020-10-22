@@ -8,8 +8,8 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response, next) => {
     try {
-        const blog = new Blog(request.body)
-        const blogSaved = await blog.save()
+        const newBlog = new Blog(request.body)
+        const blogSaved = await newBlog.save()
         response.status(201).json(blogSaved)
     } catch (error) {
         next(error)
@@ -18,11 +18,25 @@ blogsRouter.post('/', async (request, response, next) => {
 
 blogsRouter.delete('/:id', async (request, response, next) => {
     try {
-        const id = request.params.id
+        const { id } = request.params
         const result = await Blog.findByIdAndDelete(id)
         response.status(204).end()
     } catch (e) {
         next(e)
+    }
+})
+
+blogsRouter.put('/:id', async (request, response, next) => {
+    try {
+        const { id } = request.params
+        const { likes } = request.body
+        const updatedDataBlog = {
+            likes
+        }
+        const updatedBlog = await Blog.findByIdAndUpdate(id, updatedDataBlog, { new: true })
+        response.status(204).json(updatedBlog)
+    } catch (error) {
+        next(error)
     }
 })
 

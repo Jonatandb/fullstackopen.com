@@ -15,4 +15,12 @@ Content-Type: application/json
 }
 
 ### Delete a blog
-DELETE {{API_URL}}/5f90cb615691372444096dcc
+DELETE {{API_URL}}/5f90d0cb0a305d1460e84f4c
+
+### Update a blog
+PUT {{API_URL}}/5f90d0e80a305d1460e84f4d
+Content-Type: application/json
+
+{
+    "likes": 65461
+}
