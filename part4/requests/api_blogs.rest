@@ -8,10 +8,10 @@ POST {{API_URL}}
 Content-Type: application/json
 
 {
-    "title":"Full Stack Open 2020",
+    "title":"Full Stack Open 2020 V2",
     "author":"Jonatandb",
     "url":"github.com/Jonatandb",
-    "likes": 100
+    "likes": 50000
 }
 
 ### Delete a blog
