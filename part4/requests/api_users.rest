@@ -8,7 +8,7 @@ POST {{API_URL}}
 Content-Type: application/json
 
 {
+    "name":"Jonatandb",
     "username":"Jonatandb",
-    "name":"Jonatan",
-    "password": "FullStackOpen2020"
+    "password": "123"
 }
