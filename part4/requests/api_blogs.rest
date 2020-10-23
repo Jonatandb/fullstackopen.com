@@ -6,12 +6,13 @@ GET {{API_URL}}
 ### Add new blog
 POST {{API_URL}}
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvbmF0YW5kYiIsImlkIjoiNWY5MjE2MjlhOTJmMWIyZjk0ODc1NDRhIiwiaWF0IjoxNjAzNDIxNTY4fQ.wP52JeYPdLswTNlzYp11N8UTnqYBJQUF89noQxn1_Mw
 
 {
-    "title":"Full Stack Open 2020 V2",
+    "title":"Using JWT",
     "author":"Jonatandb",
     "url":"github.com/Jonatandb",
-    "likes": 50000
+    "likes": 123
 }
 
 ### Delete a blog
