@@ -7,7 +7,7 @@
     "type": "git",
     "url": "git+https://github.com/Jonatandb/fullstackopen.com.git"
   },
-  "keywords": [],
+  "keywords": ["jonatandb", "fullstackopen2020", "es6", "nodejs", "react", "jwt-authentication", "mongoose", "mongodb", "bcrypt", "dotenv", "express", "jest", "nodemon", "supertest", "cross-env"],
   "author": "",
   "license": "ISC",
   "bugs": {

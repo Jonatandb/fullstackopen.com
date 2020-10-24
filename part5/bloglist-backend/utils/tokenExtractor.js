@@ -29,7 +29,7 @@ const tokenExtractor = (request, response, next) => {
             if (!thereIsToken(token))
                 return response.status(401).json({ error: 'token missing or invalid' })
 
-            const decodedToken = jwt.verify(token, process.env.SECRET)
+            const decodedToken = jwt.verify(token, process.env.SIGN_TOKEN_SECRET)
 
             if (!thereIsTokenId(decodedToken))
                 return response.status(401).json({ error: 'token invalid' })
