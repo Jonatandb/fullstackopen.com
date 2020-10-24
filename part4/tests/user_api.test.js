@@ -18,8 +18,10 @@ describe('addition of a new user', () => {
             username: 'Jonatandb',
             password: '123'
         }
-        const response = await api.post('/api/users').send(newUser)
-        expect(response.status).toBe(200)
+        await api
+            .post('/api/users').send(newUser)
+            .expect('Content-Type', /json/)
+            .expect(200)
     })
 
     test('invalid user creation without username returns status code 400 and correct error message', async () => {

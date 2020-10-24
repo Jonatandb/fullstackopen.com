@@ -5,7 +5,7 @@ const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', { blogs: 0 })
-    response.json(blogs)
+    return response.json(blogs)
 })
 
 blogsRouter.post('/', async (request, response, next) => {
@@ -27,7 +27,7 @@ blogsRouter.post('/', async (request, response, next) => {
         user.blogs = user.blogs.concat(blogSaved._id)
         await user.save()
 
-        response.status(201).json(blogSaved)
+        return response.status(201).json(blogSaved)
     } catch (error) {
         next(error)
     }
@@ -39,21 +39,33 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 
         const loggedUser = await User.findById(decodedToken.id)
 
+        if (!loggedUser) {
+            return response.status(401).json({
+                error: `Logged user do not longer exists`
+            })
+        }
+
         const { id } = request.params
+
+        if (!id) {
+            return response.status(404).json({ error: 'Blog id missing or invalid' })
+        }
+
         const blog = await Blog.findById(id)
 
         if (!blog) {
-            response.status(404).json({ error: 'blog not found' })
+            return response.status(404).json({ error: 'Blog not found' })
         }
 
-        if (loggedUser.id.toString() === blog.user.toString()) {
+        if (!blog.user || loggedUser.id.toString() === blog.user.toString()) {
             await Blog.findByIdAndDelete(blog.id)
-            response.status(204).end()
+            return response.status(204).end()
         } else {
-            response.status(401).json({
-                error: 'blogs can be deleted only by their owners'
+            return response.status(401).json({
+                error: 'Blogs can be deleted only by their owners'
             })
         }
+
     } catch (e) {
         next(e)
     }
@@ -61,15 +73,41 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 
 blogsRouter.put('/:id', async (request, response, next) => {
     try {
+        const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+        const loggedUser = await User.findById(decodedToken.id)
+
+        if (!loggedUser) {
+            return response.status(401).json({
+                error: `Logged user do not longer exists`
+            })
+        }
+
         const { id } = request.params
+
+        if (!id) {
+            return response.status(404).json({ error: 'Blog id missing or invalid' })
+        }
+
         const { likes } = request.body
+
+        if (!likes) {
+            return response.status(400).json({ error: 'Blog likes amount missing or invalid' })
+        }
+        else if (typeof (likes + 1) !== 'number') {
+            return response.status(400).json({ error: 'Blog likes amount missing or invalid' })
+        }
+
         const updatedDataBlog = {
             likes
         }
+
         const updatedBlog = await Blog.findByIdAndUpdate(id, updatedDataBlog, { new: true })
-        response.status(204).json(updatedBlog)
-    } catch (error) {
-        next(error)
+
+        return response.status(204).json(updatedBlog)
+
+    } catch (e) {
+        next(e)
     }
 })
 

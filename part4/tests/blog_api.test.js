@@ -1,10 +1,14 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const bcrypt = require('bcrypt')
 
 const api = supertest(app)
 
+const User = require('../models/user')
+
 const Blog = require('../models/blog')
+
 const initialBlogs = [
     {
         title: "Full Stack Open 2020",
@@ -20,12 +24,35 @@ const initialBlogs = [
     }
 ]
 
+let token = ''
+
 beforeEach(async () => {
+    await User.deleteMany({})
+
+    // tmp user creation
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash('123', saltRounds)
+    const tempUser = await User.create({
+        name: 'tempUser',
+        username: 'tempUser',
+        passwordHash
+    })
+
     await Blog.deleteMany({})
     let blogObject = new Blog(initialBlogs[0])
+    blogObject.user = tempUser.id
     await blogObject.save()
     blogObject = new Blog(initialBlogs[1])
+    blogObject.user = tempUser.id
     await blogObject.save()
+
+    // login
+    const loginResponse = await api
+        .post('/api/login')
+        .send({ username: 'tempUser', password: '123' })
+
+    // getting token
+    token = loginResponse.body.token
 })
 
 describe('when there is initially some blogs saved', () => {
@@ -45,6 +72,7 @@ describe('when there is initially some blogs saved', () => {
 
 describe('addition of a new blog', () => {
     test('new blog is created correctly', async () => {
+
         const newBlog = {
             title: "Full Stack Open 2020",
             author: "Jonatandb",
@@ -52,7 +80,11 @@ describe('addition of a new blog', () => {
             likes: 1005
         }
 
-        const response = await api.post('/api/blogs').send(newBlog)
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set('authorization', `bearer ${token}`)
+
         expect(response.status).toBe(201)
         expect(response.body.author).toBeDefined()
         expect(response.body.likes).toBeDefined()
@@ -71,7 +103,11 @@ describe('addition of a new blog', () => {
             url: "github.com/Jonatandb"
         }
 
-        const response = await api.post('/api/blogs').send(newBlog)
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set('authorization', `bearer ${token}`)
+
         expect(response.body.likes).toBeDefined()
         const blogExistsInDB = await Blog.findById(response.body.id)
         expect(blogExistsInDB.likes).toBe(0)
@@ -83,18 +119,37 @@ describe('addition of a new blog', () => {
             likes: 1400
         }
 
-        const response = await api.post('/api/blogs').send(newBlog)
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set('authorization', `bearer ${token}`)
         expect(response.status).toBe(400)
+    })
+
+    test('creation attempt fails with status code 401 Unauthorized if a token is not provided', async () => {
+        const newBlog = {
+            title: "Full Stack Open 2020",
+            author: "Jonatandb",
+            likes: 1400
+        }
+
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlog)
+        expect(response.status).toBe(401)
     })
 })
 
 describe('deletion of a blog', () => {
     test('succeeds with status code 204 if id is valid', async () => {
-        const blogsAtStart = await api.get('/api/blogs')
+        const blogsAtStart = await api
+            .get('/api/blogs')
+
         const blogToDelete = blogsAtStart.body[0]
 
-        await api
+        const response = await api
             .delete(`/api/blogs/${blogToDelete.id}`)
+            .set('authorization', `bearer ${token}`)
             .expect(204)
 
         const blogsAtEnd = await api.get('/api/blogs')
@@ -107,6 +162,39 @@ describe('deletion of a blog', () => {
 
         expect(titles).not.toContain(blogToDelete.title)
     })
+
+    test('error with status code 404 if blog id is invalid or inexistent', async () => {
+        const blogsAtStart = await api
+            .get('/api/blogs')
+
+        const nonexistentBlog = new Blog({
+            title: "Full Stack Open 2020 v2.5",
+            author: "Jonatandb",
+            url: "github.com/Jonatandb",
+            likes: 1500
+        })
+
+        const response = await api
+            .delete(`/api/blogs/${nonexistentBlog.id}`)
+            .set('authorization', `bearer ${token}`)
+            .expect(404)
+
+        const blogsAtEnd = await api.get('/api/blogs')
+        expect(blogsAtEnd.body).toHaveLength(
+            blogsAtStart.body.length
+        )
+    })
+
+    test('deletion attempt fails with status code 401 Unauthorized if a token is not provided', async () => {
+        const blogsAtStart = await api
+            .get('/api/blogs')
+
+        const blogToDelete = blogsAtStart.body[0]
+
+        const response = await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(401)
+    })
 })
 
 describe('updation of a blog', () => {
@@ -114,17 +202,32 @@ describe('updation of a blog', () => {
         const blogsAtStart = await api.get('/api/blogs')
         const blogToUpdate = blogsAtStart.body[0]
         const updatedLikesAmount = {
-            likes: 123
+            likes: 513518
         }
+
         await api
             .put(`/api/blogs/${blogToUpdate.id}`)
             .send(updatedLikesAmount)
+            .set('authorization', `bearer ${token}`)
             .expect(204)
 
         const blogsAtEnd = await api.get('/api/blogs')
         const blogUpdated = blogsAtEnd.body[0]
 
         expect(blogUpdated.likes).toBe(updatedLikesAmount.likes)
+    })
+
+    test('updation attempt fails with status code 401 Unauthorized if a token is not provided', async () => {
+        const blogsAtStart = await api.get('/api/blogs')
+        const blogToUpdate = blogsAtStart.body[0]
+        const updatedLikesAmount = {
+            likes: 513518
+        }
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedLikesAmount)
+            .expect(401)
     })
 })
 
