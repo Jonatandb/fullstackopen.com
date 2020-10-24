@@ -6,9 +6,10 @@ GET {{API_URL}}
 ### Add new user
 POST {{API_URL}}
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvbmF0YW5kYiIsImlkIjoiNWY5MjE2MjlhOTJmMWIyZjk0ODc1NDRhIiwiaWF0IjoxNjAzNDk4NjM5fQ.QlaeMe9FxLtbxKSP59hwyGenPOyK7xsdo0_plIR3o04
 
 {
     "name":"Jonatandb",
-    "username":"Jonatandb",
+    "username":"Jonatandb2",
     "password": "123"
 }
