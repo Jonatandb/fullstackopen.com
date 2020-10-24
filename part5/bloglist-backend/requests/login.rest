@@ -1,0 +1,10 @@
+@API_URL = http://localhost:3003/api/login
+
+### Login
+POST {{API_URL}}
+Content-Type: application/json
+
+{
+    "username":"Jonatandb",
+    "password": "123"
+}

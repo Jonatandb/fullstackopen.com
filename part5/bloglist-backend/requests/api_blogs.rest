@@ -1,0 +1,32 @@
+@API_URL = http://localhost:3003/api/blogs
+
+### List blogs
+GET {{API_URL}}
+
+### Add new blog
+POST {{API_URL}}
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvbmF0YW5kYiIsImlkIjoiNWY5MjE2MjlhOTJmMWIyZjk0ODc1NDRhIiwiaWF0IjoxNjAzNDI0MDEwfQ.Mq6ypjrTSJTTobtvJHLvrCN_rrNKhEZu__aIrLAiBhQ
+
+{
+    "title":"Using JWT 2",
+    "author":"Jonatandb",
+    "url":"github.com/Jonatandb",
+    "likes": 123
+}
+
+### Delete a blog
+DELETE {{API_URL}}/5f9259519b4de00a20cad330
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvbmF0YW5kYiIsImlkIjoiNWY5MjE2MjlhOTJmMWIyZjk0ODc1NDRhIiwiaWF0IjoxNjAzNDk1Mzg5fQ.pz-N8gjk03ZyaHiENz_0QguBBI3IWH2Uh3vxjhT3uOU
+
+
+
+
+### Update a blog
+PUT {{API_URL}}/5f90d0e80a305d1460e84f4d
+Content-Type: application/json
+
+{
+    "likes": 65461
+}

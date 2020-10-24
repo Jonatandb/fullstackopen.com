@@ -1,0 +1,7 @@
+MONGODB_URI="mongodb+srv://USER:PASS@..."
+
+TEST_MONGODB_URI="mongodb+srv://USER:PASS@..."
+
+PORT=3...
+
+SECRET=...
