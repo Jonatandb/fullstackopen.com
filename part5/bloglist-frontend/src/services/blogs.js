@@ -31,4 +31,29 @@ const create = async (title, author, url) => {
 
 }
 
-export default { getAll, create, setToken }
+const update = async (blog) => {
+
+  const headersData = {
+    headers: { Authorization: `bearer ${token}` }
+  }
+
+  const { user: { id }, likes, author, title, url } = blog
+
+  const blogData = {
+    user: id,
+    likes: likes + 1,
+    author,
+    title,
+    url,
+  }
+
+  const updateURL = `${baseUrl}/${blog.id}`
+
+  const response = await axios
+    .put(updateURL, blogData, headersData)
+
+  return response
+
+}
+
+export default { getAll, create, update, setToken }

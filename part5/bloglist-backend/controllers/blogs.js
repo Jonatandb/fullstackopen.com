@@ -120,7 +120,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
 
         const updatedBlog = await Blog.findByIdAndUpdate(id, updatedDataBlog, { new: true })
 
-        return response.status(204).json(updatedBlog)
+        return response.status(200).json(updatedBlog)
 
     } catch (error) {
 
