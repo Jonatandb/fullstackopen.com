@@ -10,7 +10,8 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response, next) => {
     try {
-        const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+        const decodedToken = jwt.verify(request.token, process.env.SIGN_TOKEN_SECRET)
 
         const user = await User.findById(decodedToken.id)
 
@@ -35,7 +36,7 @@ blogsRouter.post('/', async (request, response, next) => {
 
 blogsRouter.delete('/:id', async (request, response, next) => {
     try {
-        const decodedToken = jwt.verify(request.token, process.env.SECRET)
+        const decodedToken = jwt.verify(request.token, process.env.SIGN_TOKEN_SECRET)
 
         const loggedUser = await User.findById(decodedToken.id)
 
@@ -73,7 +74,7 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 
 blogsRouter.put('/:id', async (request, response, next) => {
     try {
-        const decodedToken = jwt.verify(request.token, process.env.SECRET)
+        const decodedToken = jwt.verify(request.token, process.env.SIGN_TOKEN_SECRET)
 
         const loggedUser = await User.findById(decodedToken.id)
 
