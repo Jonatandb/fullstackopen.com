@@ -3,7 +3,7 @@ const baseUrl = '/api/blogs'
 
 let token
 
-const setToken = tokenData => token = tokenData
+const setToken = tokenData => token = tokenData.token
 
 const getAll = async () => {
 
