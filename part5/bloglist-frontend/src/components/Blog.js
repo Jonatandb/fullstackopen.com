@@ -15,15 +15,15 @@ const Blog = ({ blog, loggedUser, updateLike, removeBlog }) => {
   const removeButtonVisibilityStyle = { display: blog.user.username === loggedUser ? '' : 'none' }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blogData'>
       {blog.title} <button onClick={() => setshowDetails(!showDetails)}>{showDetails ? 'Hide' : 'View'}</button><br />
       {
-        showDetails && <>
+        showDetails && <div className='blogDetails'>
           {blog.url}<br />
           likes {blog.likes} <button onClick={() => updateLike(blog)}>Like</button><br />
           {blog.author}<br />
           <button onClick={() => removeBlog(blog)} style={removeButtonVisibilityStyle}>Remove</button>
-        </>
+        </div>
       }
     </div >
   )
