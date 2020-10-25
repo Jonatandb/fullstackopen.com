@@ -1,11 +1,28 @@
-
 const jwt = require('jsonwebtoken')
+const logger = require('./logger')
 
-const thereIsAuthorizationData = authorization => authorization && authorization.toLowerCase().startsWith('bearer ')
+const SHOW_LOGS = false
 
-const thereIsToken = token => token && token.trim().length > 0
+const thereIsAuthorizationData = authorization => {
+    SHOW_LOGS && logger.info('thereIsAuthorizationData -> authorization:', authorization)
+    const result = authorization && authorization.toLowerCase().startsWith('bearer ')
+    SHOW_LOGS && logger.info('thereIsAuthorizationData -> result:', result)
+    return result
+}
 
-const thereIsTokenId = token => token && token.id
+const thereIsToken = token => {
+    SHOW_LOGS && logger.info('thereIsToken -> token:', token)
+    const result = token && (token.trim().length > 0)
+    SHOW_LOGS && logger.info('thereIsToken -> result:', result)
+    return result
+}
+
+const thereIsTokenId = token => {
+    SHOW_LOGS && logger.info('thereIsTokenId -> token:', token)
+    const result = token && (typeof token.id !== 'undefined')
+    SHOW_LOGS && logger.info('thereIsTokenId -> result:', result)
+    return result
+}
 
 const tokenExtractor = (request, response, next) => {
     try {
@@ -29,7 +46,11 @@ const tokenExtractor = (request, response, next) => {
             if (!thereIsToken(token))
                 return response.status(401).json({ error: 'token missing or invalid' })
 
+            SHOW_LOGS && logger.info('tokenExtractor -> token:', token)
+
             const decodedToken = jwt.verify(token, process.env.SIGN_TOKEN_SECRET)
+
+            SHOW_LOGS && logger.info('tokenExtractor -> decodedToken OK')
 
             if (!thereIsTokenId(decodedToken))
                 return response.status(401).json({ error: 'token invalid' })
@@ -39,6 +60,8 @@ const tokenExtractor = (request, response, next) => {
             next()
         }
     } catch (e) {
+
+        SHOW_LOGS && logger.info('tokenExtractor -> decodedToken FAIL')
 
         next(e)
 

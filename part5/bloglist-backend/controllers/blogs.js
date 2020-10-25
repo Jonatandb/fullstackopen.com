@@ -4,8 +4,16 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({}).populate('user', { blogs: 0 })
-    return response.json(blogs)
+    try {
+
+        const blogs = await Blog.find({}).populate('user', { blogs: 0 })
+        return response.json(blogs)
+
+    } catch (error) {
+
+        next(error)
+
+    }
 })
 
 blogsRouter.post('/', async (request, response, next) => {
@@ -29,13 +37,17 @@ blogsRouter.post('/', async (request, response, next) => {
         await user.save()
 
         return response.status(201).json(blogSaved)
+
     } catch (error) {
+
         next(error)
+
     }
 })
 
 blogsRouter.delete('/:id', async (request, response, next) => {
     try {
+
         const decodedToken = jwt.verify(request.token, process.env.SIGN_TOKEN_SECRET)
 
         const loggedUser = await User.findById(decodedToken.id)
@@ -67,13 +79,16 @@ blogsRouter.delete('/:id', async (request, response, next) => {
             })
         }
 
-    } catch (e) {
-        next(e)
+    } catch (error) {
+
+        next(error)
+
     }
 })
 
 blogsRouter.put('/:id', async (request, response, next) => {
     try {
+
         const decodedToken = jwt.verify(request.token, process.env.SIGN_TOKEN_SECRET)
 
         const loggedUser = await User.findById(decodedToken.id)
@@ -107,8 +122,10 @@ blogsRouter.put('/:id', async (request, response, next) => {
 
         return response.status(204).json(updatedBlog)
 
-    } catch (e) {
-        next(e)
+    } catch (error) {
+
+        next(error)
+
     }
 })
 
