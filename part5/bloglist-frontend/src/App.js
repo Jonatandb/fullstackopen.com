@@ -16,12 +16,10 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    if (!user) {
-      const savedUserData = JSON.parse(window.localStorage.getItem('loggedUser'))
-      if (savedUserData) {
-        blogService.setToken(savedUserData)
-        setUser(savedUserData)
-      }
+    const savedUserData = JSON.parse(window.localStorage.getItem('loggedUser'))
+    if (savedUserData) {
+      blogService.setToken(savedUserData)
+      setUser(savedUserData)
     }
   }, [])
 

@@ -15,10 +15,27 @@ const Blog = ({ blog }) => {
   }
 
   const handleLike = async () => {
-    setSendingUpdate(true)
-    const updatedBlog = await blogService.update(currentBlog)
-    setCurrentBlog(updatedBlog.data)
-    setSendingUpdate(false)
+    try {
+
+      setSendingUpdate(true)
+
+      const updatedBlog = {
+        ...currentBlog,
+        likes: currentBlog.likes + 1
+      }
+
+      await blogService.update(updatedBlog)
+
+      setCurrentBlog(updatedBlog)
+
+    } catch (e) {
+
+    } finally {
+
+      setSendingUpdate(false)
+
+    }
+
   }
 
   return (

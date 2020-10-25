@@ -105,7 +105,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
             return response.status(404).json({ error: 'Blog id missing or invalid' })
         }
 
-        const { likes } = request.body
+        const { likes, user, author, title, url } = request.body
 
         if (!likes) {
             return response.status(400).json({ error: 'Blog likes amount missing or invalid' })
@@ -115,12 +115,15 @@ blogsRouter.put('/:id', async (request, response, next) => {
         }
 
         const updatedDataBlog = {
-            likes
+            likes,
+            user,
+            author,
+            title,
+            url
         }
 
-        const updatedBlog = await Blog.findByIdAndUpdate(id, updatedDataBlog, { new: true })
-
-        return response.status(200).json(updatedBlog)
+        await Blog.findByIdAndUpdate(id, updatedDataBlog)
+        return response.status(204).end()
 
     } catch (error) {
 

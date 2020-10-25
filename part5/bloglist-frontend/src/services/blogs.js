@@ -41,7 +41,7 @@ const update = async (blog) => {
 
   const blogData = {
     user: id,
-    likes: likes + 1,
+    likes,
     author,
     title,
     url,
