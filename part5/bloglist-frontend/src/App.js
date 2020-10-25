@@ -41,7 +41,7 @@ const App = () => {
       setNotification({ message: errorMessage, error: true })
       setTimeout(() => {
         setNotification(null)
-      }, 5000);
+      }, 5000)
 
     }
   }
@@ -69,7 +69,7 @@ const App = () => {
       setNotification({ message: `A new blog ${title} by ${author} added` })
       setTimeout(() => {
         setNotification(null)
-      }, 5000);
+      }, 5000)
 
       getBlogs()
 
@@ -79,7 +79,7 @@ const App = () => {
       setNotification({ message: errorMessage, error: true })
       setTimeout(() => {
         setNotification(null)
-      }, 5000);
+      }, 5000)
 
     }
   }
@@ -101,7 +101,7 @@ const App = () => {
       setNotification({ message: e.message, error: true })
       setTimeout(() => {
         setNotification(null)
-      }, 5000);
+      }, 5000)
 
     }
   }
@@ -120,7 +120,7 @@ const App = () => {
       setNotification({ message: e.message, error: true })
       setTimeout(() => {
         setNotification(null)
-      }, 5000);
+      }, 5000)
 
     }
   }
