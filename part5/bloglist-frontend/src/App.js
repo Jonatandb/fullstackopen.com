@@ -71,13 +71,53 @@ const App = () => {
         setNotification(null)
       }, 5000);
 
-
       getBlogs()
 
     } catch (error) {
 
       const errorMessage = error.response ? error.response.data.error : error.message
       setNotification({ message: errorMessage, error: true })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000);
+
+    }
+  }
+
+  const handleUpdateLike = async blog => {
+    try {
+
+      const updatedBlog = {
+        ...blog,
+        likes: blog.likes + 1
+      }
+
+      await blogService.update(updatedBlog)
+
+      getBlogs()
+
+    } catch (e) {
+
+      setNotification({ message: e.message, error: true })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000);
+
+    }
+  }
+
+  const handleRemoveBlog = async blog => {
+    try {
+
+      const result = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
+      if (result) {
+        await blogService.remove(blog)
+        getBlogs()
+      }
+
+    } catch (e) {
+
+      setNotification({ message: e.message, error: true })
       setTimeout(() => {
         setNotification(null)
       }, 5000);
@@ -93,10 +133,10 @@ const App = () => {
       <NotificationMessage message={notification} />
       <p>{user.username} logged in <button onClick={handleLogout}>Logout</button></p>
       <Togglable buttonLabel="New blog" ref={blogFormRef}>
-        <CreateBlogForm handleSubmit={handleCreateBlog} />
+        <CreateBlogForm createBlog={handleCreateBlog} setNotification={setNotification} />
       </Togglable>
       {blogs.sort((a, b) => a.likes > b.likes ? -1 : 1).map(blog => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} loggedUser={user.username} updateLike={handleUpdateLike} removeBlog={handleRemoveBlog} />
       ))}
     </div>
 

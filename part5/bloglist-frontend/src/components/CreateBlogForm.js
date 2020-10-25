@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const CreateBlogForm = ({ handleSubmit }) => {
+const CreateBlogForm = ({ createBlog, setNotification }) => {
 
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
@@ -9,7 +9,23 @@ const CreateBlogForm = ({ handleSubmit }) => {
     const handleCreateBlog = evt => {
         evt.preventDefault()
 
-        handleSubmit({
+        if (!title || title.trim().length === 0) {
+            setNotification({ message: `Error: Title required`, error: true })
+            setTimeout(() => {
+                setNotification(null)
+            }, 5000);
+            return
+        }
+
+        if (!url || url.trim().length === 0) {
+            setNotification({ message: `Error: URL required`, error: true })
+            setTimeout(() => {
+                setNotification(null)
+            }, 5000);
+            return
+        }
+
+        createBlog({
             title,
             author,
             url

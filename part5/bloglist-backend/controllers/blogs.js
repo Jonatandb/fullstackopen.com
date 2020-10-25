@@ -74,7 +74,7 @@ blogsRouter.delete('/:id', async (request, response, next) => {
             await Blog.findByIdAndDelete(blog.id)
             return response.status(204).end()
         } else {
-            return response.status(401).json({
+            return response.status(400).json({
                 error: 'Blogs can be deleted only by their owners'
             })
         }

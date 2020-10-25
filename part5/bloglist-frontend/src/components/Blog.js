@@ -1,10 +1,7 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
-  const [open, setOpen] = useState(false)
-  const [currentBlog, setCurrentBlog] = useState(blog)
-  const [sendingUpdate, setSendingUpdate] = useState(false)
+const Blog = ({ blog, loggedUser, updateLike, removeBlog }) => {
+  const [showDetails, setshowDetails] = useState(false)
 
   const blogStyle = {
     paddingTop: 10,
@@ -14,38 +11,17 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
 
-  const handleLike = async () => {
-    try {
-
-      setSendingUpdate(true)
-
-      const updatedBlog = {
-        ...currentBlog,
-        likes: currentBlog.likes + 1
-      }
-
-      await blogService.update(updatedBlog)
-
-      setCurrentBlog(updatedBlog)
-
-    } catch (e) {
-
-    } finally {
-
-      setSendingUpdate(false)
-
-    }
-
-  }
+  const removeButtonVisibilityStyle = { display: blog.user.username === loggedUser ? '' : 'none' }
 
   return (
     <div style={blogStyle}>
-      {currentBlog.title} <button onClick={() => setOpen(!open)}>{open ? 'Hide' : 'View'}</button><br />
+      {blog.title} <button onClick={() => setshowDetails(!showDetails)}>{showDetails ? 'Hide' : 'View'}</button><br />
       {
-        open && <>
-          {currentBlog.url}<br />
-          likes {currentBlog.likes} <button onClick={() => handleLike()} disabled={sendingUpdate} >Like</button><br />
-          {currentBlog.author}<br />
+        showDetails && <>
+          {blog.url}<br />
+          likes {blog.likes} <button onClick={() => updateLike(blog)}>Like</button><br />
+          {blog.author}<br />
+          <button onClick={() => removeBlog(blog)} style={removeButtonVisibilityStyle}>Remove</button>
         </>
       }
     </div >
