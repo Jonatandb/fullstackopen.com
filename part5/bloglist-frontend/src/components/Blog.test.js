@@ -52,8 +52,7 @@ describe('<Blog /> ', () => {
     expect(blogData).toHaveTextContent(blog.likes)
   })
 
-
-  test.only('if the like button is clicked twice, the updateLike event handler is called twice.', () => {
+  test('if the like button is clicked twice, the updateLike event handler is called twice.', () => {
 
     const showDetailsButton = component.getByText('View')
     fireEvent.click(showDetailsButton)
@@ -64,4 +63,5 @@ describe('<Blog /> ', () => {
 
     expect(updateLike.mock.calls).toHaveLength(2)
   })
+
 })

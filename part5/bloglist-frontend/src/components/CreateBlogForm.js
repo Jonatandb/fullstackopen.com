@@ -38,7 +38,7 @@ const CreateBlogForm = ({ createBlog, setNotification }) => {
   }
 
   return <>
-    <form onSubmit={handleCreateBlog}>
+    <form onSubmit={handleCreateBlog} className="formDiv">
       <h2>Create blog</h2>
       <div>
         <label htmlFor="title">Title: </label>
