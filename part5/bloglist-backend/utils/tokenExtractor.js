@@ -40,7 +40,7 @@ const tokenExtractor = async  (request, response, next) => {
 
             next()
 
-        } else if (request.url === '/api/login' || request.url === '/api/users') {
+        } else if (request.url === '/api/login' || request.url === '/api/users' || request.url === '/api/testing/reset') {
 
             next()
 
