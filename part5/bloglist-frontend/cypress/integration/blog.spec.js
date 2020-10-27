@@ -42,11 +42,9 @@ describe('Bloglist app', () => {
   })
 
   describe('When logged in', function() {
-    beforeEach(function() {
-      cy.login({ username, password })
-    })
 
     it('A blog can be created', function() {
+      cy.login({ username, password })
       const blogTitle = 'Blog created with Cypress'
       const author = 'Cypress'
       cy.contains('New blog').click()
@@ -57,6 +55,29 @@ describe('Bloglist app', () => {
       cy.contains(`A new blog ${blogTitle} by ${author} added`)
       cy.get('.blogData').should('contain', blogTitle)
     })
+
+    describe('and a blog exists', function() {
+      const title = 'Blog created with Cypress'
+      const author = 'Cypress'
+      const url = 'url'
+
+      beforeEach(() => {
+        cy.login({ username, password })
+        cy.createBlog({
+          title,
+          author,
+          url
+        })
+      })
+
+      it('the user can like a blog', () =>  {
+        cy.get('.blogData > button').click()
+        cy.get('.blogDetails > :nth-child(2)').click()
+        cy.contains('likes 1')
+      })
+
+    })
+
   })
 
 })
