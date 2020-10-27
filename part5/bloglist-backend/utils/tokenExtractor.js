@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const logger = require('./logger')
+const User = require('../models/user')
 
 const SHOW_LOGS = false
 
@@ -24,8 +25,17 @@ const thereIsTokenId = token => {
     return result
 }
 
-const tokenExtractor = (request, response, next) => {
+const userIsValid = async token => {
+    SHOW_LOGS && logger.info('userIsValid -> token:', token)
+    const user = await User.findById(token.id)
+    result = user !== null
+    SHOW_LOGS && logger.info('userIsValid -> result:', result)
+    return result
+}
+
+const tokenExtractor = async  (request, response, next) => {
     try {
+
         if (request.method === 'GET') {
 
             next()
@@ -39,12 +49,12 @@ const tokenExtractor = (request, response, next) => {
             const authorizationContent = request.get('authorization')
 
             if (!thereIsAuthorizationData(authorizationContent))
-                return response.status(401).json({ error: 'header authorization missing or invalid' })
+                return response.status(401).json({ error: 'Header authorization missing or invalid.' })
 
             const token = authorizationContent.substring(7)
 
             if (!thereIsToken(token))
-                return response.status(401).json({ error: 'token missing or invalid' })
+                return response.status(401).json({ error: 'Token missing or invalid.' })
 
             SHOW_LOGS && logger.info('tokenExtractor -> token:', token)
 
@@ -53,15 +63,22 @@ const tokenExtractor = (request, response, next) => {
             SHOW_LOGS && logger.info('tokenExtractor -> decodedToken OK')
 
             if (!thereIsTokenId(decodedToken))
-                return response.status(401).json({ error: 'token invalid' })
+                return response.status(401).json({ error: 'Invalid token.' })
+
+            const isValidUser = await userIsValid(decodedToken)
+            SHOW_LOGS && logger.info('tokenExtractor -> isValidUser:', isValidUser)
+
+            if(!isValidUser)
+                return response.status(401).json({ error: 'Logged user invalid or inactive.' })
 
             request.token = token
 
             next()
         }
+
     } catch (e) {
 
-        SHOW_LOGS && logger.info('tokenExtractor -> decodedToken FAIL')
+        logger.error('tokenExtractor error:',e)
 
         next(e)
 
