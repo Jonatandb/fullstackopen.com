@@ -41,4 +41,22 @@ describe('Bloglist app', () => {
 
   })
 
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username, password })
+    })
+
+    it('A blog can be created', function() {
+      const blogTitle = 'Blog created with Cypress'
+      const author = 'Cypress'
+      cy.contains('New blog').click()
+      cy.get('#title').type(blogTitle)
+      cy.get('#author').type(author)
+      cy.get('#url').type('url')
+      cy.get('.formDiv > button').click()
+      cy.contains(`A new blog ${blogTitle} by ${author} added`)
+      cy.get('.blogData').should('contain', blogTitle)
+    })
+  })
+
 })
