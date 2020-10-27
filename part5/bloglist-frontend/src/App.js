@@ -75,7 +75,10 @@ const App = () => {
 
     } catch (error) {
 
-      const errorMessage = error.response ? error.response.data.error : error.message
+      let errorMessage = error.message
+      if(error.response && error.response.data && error.response.data.error) {
+        errorMessage = error.response.data.error
+      }
       setNotification({ message: errorMessage, error: true })
       setTimeout(() => {
         setNotification(null)
@@ -96,9 +99,13 @@ const App = () => {
 
       getBlogs()
 
-    } catch (e) {
+    } catch (error) {
 
-      setNotification({ message: e.message, error: true })
+      let errorMessage = error.message
+      if(error.response && error.response.data && error.response.data.error) {
+        errorMessage = error.response.data.error
+      }
+      setNotification({ message: errorMessage, error: true })
       setTimeout(() => {
         setNotification(null)
       }, 5000)
@@ -115,9 +122,13 @@ const App = () => {
         getBlogs()
       }
 
-    } catch (e) {
+    } catch (error) {
 
-      setNotification({ message: e.message, error: true })
+      let errorMessage = error.message
+      if(error.response && error.response.data && error.response.data.error) {
+        errorMessage = error.response.data.error
+      }
+      setNotification({ message: errorMessage, error: true })
       setTimeout(() => {
         setNotification(null)
       }, 5000)
