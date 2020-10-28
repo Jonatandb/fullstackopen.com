@@ -84,7 +84,7 @@ describe('Bloglist app', () => {
           .should('not.contain', title)
       })
 
-      it.only('the blogs are ordered according to likes, with the blog with the most likes being first', () =>  {
+      it('the blogs are ordered according to likes, with the blog with the most likes being first', () =>  {
 
         cy.createBlog({
           title: title + ' 2',
