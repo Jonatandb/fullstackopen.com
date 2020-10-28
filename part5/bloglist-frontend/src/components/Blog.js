@@ -16,13 +16,13 @@ const Blog = ({ blog, loggedUser, updateLike, removeBlog }) => {
 
   return (
     <div style={blogStyle} className='blogData'>
-      {blog.title} <button onClick={() => setshowDetails(!showDetails)}>{showDetails ? 'Hide' : 'View'}</button><br />
+      {blog.title} <button id="viewHideBlogDetailsButton" onClick={() => setshowDetails(!showDetails)}>{showDetails ? 'Hide' : 'View'}</button><br />
       {
         showDetails && <div className='blogDetails'>
           {blog.url}<br />
-          likes {blog.likes} <button onClick={() => updateLike(blog)}>Like</button><br />
+          likes {blog.likes} <button id="likeBlogButton" onClick={() => updateLike(blog)}>Like</button><br />
           {blog.author}<br />
-          <button onClick={() => removeBlog(blog)} style={removeButtonVisibilityStyle}>Remove</button>
+          <button id="removeBlogButton" onClick={() => removeBlog(blog)} style={removeButtonVisibilityStyle}>Remove</button>
         </div>
       }
     </div >

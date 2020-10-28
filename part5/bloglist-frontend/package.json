@@ -49,7 +49,8 @@
     "eject": "react-scripts eject",
     "eslint": "eslint .",
     "coverage": "set CI=true&&npm test -- --coverage",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "test:e2e": "cypress run"
   },
   "eslintConfig": {
     "extends": "react-app"

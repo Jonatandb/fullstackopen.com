@@ -52,7 +52,7 @@ const CreateBlogForm = ({ createBlog, setNotification }) => {
         <label htmlFor="url">URL: </label>
         <input id='url' value={url} onChange={({ target }) => setUrl(target.value)} />
       </div>
-      <button>Create</button>
+      <button id="createBlogButton">Create</button>
     </form>
   </>
 }
