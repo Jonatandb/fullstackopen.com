@@ -8,7 +8,7 @@ describe('Bloglist app', () => {
   const author = 'Cypress'
   const url = 'url'
 
-  beforeEach(function() {
+  beforeEach( () => {
     cy.request('POST', 'http://localhost:3001/api/testing/reset')
     const user = {
       name,
@@ -19,7 +19,7 @@ describe('Bloglist app', () => {
     cy.visit('http://localhost:3000')
   })
 
-  it('Login form is shown', ( ) => {
+  it('Login form is shown', () => {
     cy.contains('Log in to application')
     cy.contains('Username:')
     cy.contains('Password:')
@@ -47,7 +47,7 @@ describe('Bloglist app', () => {
 
   })
 
-  describe('When logged in', function() {
+  describe('When logged in', () => {
 
     it('A blog can be created', function() {
       cy.login({ username, password })
@@ -83,51 +83,47 @@ describe('Bloglist app', () => {
         cy.get('html')
           .should('not.contain', title)
       })
-    })
 
-  })
+      it.only('the blogs are ordered according to likes, with the blog with the most likes being first', () =>  {
 
-  describe('When another user logged in', function() {
+        cy.createBlog({
+          title: title + ' 2',
+          author,
+          url
+        })
 
-    it('it can\'t delete the blog created for other user', () =>  {
+        cy.createBlog({
+          title: title + ' 3',
+          author,
+          url
+        })
 
-      // Login user 1
-      cy.login({ username, password })
+        cy.createBlog({
+          title: title + ' 4',
+          author,
+          url
+        })
 
-      // User 1 create a blog
-      cy.createBlog({
-        title,
-        author,
-        url
+        // Open all blogs details
+        cy.get('[id^=viewHideBlogDetailsButton]').click({ multiple: true })
+
+        // Get all like buttons and click twice in the 3rd blog like button
+        cy.get('[id^=likeBlogButton]').then(buttons => {
+          cy.wrap(buttons[buttons.length-2]).click().as('3rdButton')
+          cy.wait(2000)
+          cy.get('@3rdButton').click({ force: true })
+          cy.wait(2000)
+        })
+
+        // The first one should be now the blog with title "Blog created with Cypress 3" and to have the 2 likes clicked before
+        cy.get('[id^=likeBlogButton]').then(buttons => {
+          cy.wrap(buttons[0]).parent().should('contain', 'likes 2')
+        })
+
       })
 
-      // Logout
-      cy.get('#logoutButton').click()
-
-      // User 2 creation
-      const user = {
-        name: 'Another user',
-        username: 'SomeoneElse',
-        password: '111'
-      }
-
-      cy.request('POST', 'http://localhost:3001/api/users', user)
-
-      // Login user 2
-      cy.login({ username:'SomeoneElse', password:'111' })
-
-      // Blog created by user 1 is visible
-      cy.get('html')
-        .should('contain', title)
-
-      // Click to see details
-      cy.get('#viewHideBlogDetailsButton').click()
-
-      // Remove button is not visible because logged user is not the owner
-      cy.get('#removeBlogButton')
-        .should('have.css','display','none')
-
     })
 
   })
+
 })
