@@ -11,16 +11,19 @@ const App = () => {
       type: 'GOOD'
     })
   }
+
   const neutral = () => {
     store.dispatch({
       type: 'OK'
     })
   }
+
   const bad = () => {
     store.dispatch({
       type: 'BAD'
     })
   }
+
   const reset = () => {
     store.dispatch({
       type: 'ZERO'
