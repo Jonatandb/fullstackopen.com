@@ -1,23 +1,30 @@
 
-  const notificationReducer = (state = '', action) => {
-    console.log('state now: ', state)
-    console.log('action', action)
+const notificationReducer = (state = '', action) => {
 
-    switch (action.type) {
-      case 'NOTIFICATION': {
-        return action.message
-      }
-      default: {
-        return state
-      }
+  switch (action.type) {
+    case 'NOTIFICATION': {
+      return action.message
+    }
+    case 'CLEAR_NOTIFICATION': {
+      return ''
+    }
+    default: {
+      return state
     }
   }
+}
 
-  export const createNotification = message => {
-    return {
-      type: 'NOTIFICATION',
-      message
-    }
+export const createNotification = message => {
+  return {
+    type: 'NOTIFICATION',
+    message
   }
+}
 
-  export default notificationReducer
+export const clearNotification = message => {
+  return {
+    type: 'CLEAR_NOTIFICATION'
+  }
+}
+
+export default notificationReducer
