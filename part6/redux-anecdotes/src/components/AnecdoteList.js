@@ -5,6 +5,9 @@ import { createNotification, clearNotification } from '../reducers/notificationR
 
 const AnecdoteList = () => {
     const anecdotes = useSelector(state => state.anecdotes)
+    const filter = useSelector(state => state.filter)
+    const filteredAnecdotes = anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter.trim().toLowerCase()))
+
     const dispatch = useDispatch()
 
     const vote = anecdote => {
@@ -15,7 +18,7 @@ const AnecdoteList = () => {
         }, 5000);
     }
 
-    return anecdotes.sort((a, b) => a.votes > b.votes ? -1 : 1).map(anecdote =>
+    return filteredAnecdotes.sort((a, b) => a.votes > b.votes ? -1 : 1).map(anecdote =>
         <div key={anecdote.id}>
             <div>
                 {anecdote.content}

@@ -8,13 +8,16 @@ const AnecdoteForm = () => {
 
     const addNote = evt => {
         evt.preventDefault()
-        const newNote = asObject(evt.target.noteInput.value)
+        const note = evt.target.noteInput.value.trim()
+        if (note) {
+            const newNote = asObject(note)
+            dispatch(createAnecdote(newNote))
+            dispatch(createNotification(`You created: '${note}'.`))
+            setTimeout(() => {
+                dispatch(clearNotification())
+            }, 5000);
+        }
         evt.target.noteInput.value = ''
-        dispatch(createAnecdote(newNote))
-        dispatch(createNotification(`You created: '${newNote.content}'.`))
-        setTimeout(() => {
-            dispatch(clearNotification())
-        }, 5000);
     }
 
     return (
