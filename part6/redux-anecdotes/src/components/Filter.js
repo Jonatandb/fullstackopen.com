@@ -6,7 +6,6 @@ const Filter = () => {
     const dispatch = useDispatch()
 
     const handleChange = evt => {
-        console.log('mandar al state:', evt.target.value)
         dispatch(setFilter(evt.target.value))
     }
 
