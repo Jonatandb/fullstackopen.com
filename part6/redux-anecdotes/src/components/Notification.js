@@ -9,9 +9,9 @@ const Notification = () => {
     padding: 10,
     borderWidth: 1
   }
-  return notification && <>
+  return notification.message && <>
     <div style={style}>
-      {notification}
+      {notification.message}
     </div>
   </>
 }
