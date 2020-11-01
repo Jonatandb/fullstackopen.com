@@ -62,7 +62,7 @@ const CreateNew = (props) => {
   const author = useField('text')
   const info = useField('text')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault()
     props.addNew({
       content: content.value,
@@ -71,6 +71,13 @@ const CreateNew = (props) => {
       votes: 0
     })
     history.push('/')
+  }
+
+  const handleReset = e => {
+    e.preventDefault()
+    content.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
@@ -90,6 +97,7 @@ const CreateNew = (props) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
@@ -121,7 +129,7 @@ const App = () => {
     setAnecdotes(anecdotes.concat(anecdote))
     setNotification(`A new anecdote ${anecdote.content} created!`)
     setTimeout(() => {
-    setNotification('')
+      setNotification('')
     }, 10000);
   }
 
