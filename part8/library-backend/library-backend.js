@@ -93,18 +93,33 @@ const typeDefs = gql`
     genres: [String]
   }
 
+  type Author {
+    name: String!
+    id: ID!
+    born: Int
+    bookCount: Int
+  }
+
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks: [Book!]!
+    allAuthors: [Author!]!
   }
 `
-
 const resolvers = {
   Query: {
     authorCount: () => authors.length,
     bookCount: () => books.length,
-    allBooks: () => books
+    allBooks: () => books,
+    allAuthors: () => authors.map(({ name, id, born }) => {
+      return {
+        name,
+        id,
+        born,
+        bookCount: books.filter(book => book.author === name).length,
+      }
+    }),
   }
 }
 
