@@ -1,11 +1,11 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { ALL_AUTHORS, SET_AUTHOR_BIRTHYEAR } from '../queries'
 
 const Authors = (props) => {
-  const allAuthors = useQuery(ALL_AUTHORS)
-  const [author, setAuhtor] = useState('')
+  const authorsResponse = useQuery(ALL_AUTHORS)
+  const [authors, setAuthors] = useState([])
   const [birthyear, setBirthyear] = useState('')
   const [setAuthorBirthyear] = useMutation(SET_AUTHOR_BIRTHYEAR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
@@ -14,20 +14,41 @@ const Authors = (props) => {
     }
   })
 
-  const submit = async (event) => {
-    event.preventDefault()
-    setAuthorBirthyear({ variables: { name: author, setBornTo: Number(birthyear) } })
-    setAuhtor('')
-    setBirthyear('')
-  }
+  const [selectedAuthor, setSelectedAuthor] = useState()
+
+  useEffect(() => {
+    if (authorsResponse.loading) {
+      return undefined
+    } else {
+      if (authorsResponse.data.allAuthors.length > 0) {
+        setAuthors(authorsResponse.data.allAuthors)
+        setSelectedAuthor(authorsResponse.data.allAuthors[0])
+        setBirthyear(authorsResponse.data.allAuthors[0].born)
+      } else {
+        return undefined
+      }
+    }
+  }, [authorsResponse])
 
   if (!props.show) {
     return null
   }
 
-  if (allAuthors.loading) return null
+  if (authorsResponse.loading) return null
 
-  const authors = allAuthors.data.allAuthors
+  const Submit = async (event) => {
+    event.preventDefault()
+    setAuthorBirthyear({ variables: { name: selectedAuthor.name, setBornTo: Number(birthyear) } })
+    setBirthyear('')
+  }
+
+  const SelectAuthor = event => {
+    const selectedAuthor = authors.find(author => author.id === event.target.value)
+    if(selectedAuthor) {
+      setSelectedAuthor(selectedAuthor)
+      setBirthyear(selectedAuthor.born ? selectedAuthor.born : '')
+    }
+  }
 
   return (
     <div>
@@ -54,14 +75,10 @@ const Authors = (props) => {
       </table>
       <h2>Set birthyear</h2>
       <div>
-        <form onSubmit={submit}>
-          <div>
-            name
-          <input
-              value={author}
-              onChange={({ target }) => setAuhtor(target.value)}
-            />
-          </div>
+        <form onSubmit={Submit}>
+          <select value={selectedAuthor && selectedAuthor.id} onChange={SelectAuthor}>
+            {authors.map(au => <option key={au.id} value={au.id} >{au.name}</option>)}
+          </select>
           <div>
             born
           <input
