@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, UserInputError } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 const Author = require('./models/author')
@@ -79,19 +79,32 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
-      let author = await Author.findOne({ name: args.author })
-      if (!author) {
-        author = new Author({ name: args.author })
-        author = await author.save()
+      try {
+        let author = await Author.findOne({ name: args.author })
+        if (!author) {
+          author = new Author({ name: args.author })
+          author = await author.save()
+        }
+        const book = new Book({ ...args, author: author })
+        const savedBook = await book.save()
+        return savedBook.toJSON()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
       }
-      const book = new Book({ ...args, author: author })
-      const savedBook = await book.save()
-      return savedBook.toJSON()
     },
     editAuthor: async (root, args) => {
-      let author = await Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo })
-      await author.save()
-      return author.toJSON()
+      try {
+        let author = await Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo })
+        if (!author) return new Error("Author not found")
+        await author.save()
+        return author.toJSON()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
     }
   }
 }
