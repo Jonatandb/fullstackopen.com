@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense para saber los atributos posibles.
+    // Mantenga el puntero para ver las descripciones de los existentes atributos.
+    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "command": "npm start",
+            "name": "Frontend",
+            "request": "launch",
+            "type": "node-terminal",
+            "cwd": "${workspaceFolder}\\part8\\library-frontend"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Backend",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\part8\\library-backend\\library-backend.js",
+            "envFile": "${workspaceFolder}\\part8\\library-backend\\.env"
+        }
+    ]
+}
