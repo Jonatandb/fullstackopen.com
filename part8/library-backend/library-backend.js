@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { ApolloServer, gql, UserInputError } = require('apollo-server')
+const { ApolloServer, gql, UserInputError, AuthenticationError } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 const Author = require('./models/author')
@@ -95,8 +95,8 @@ const resolvers = {
     },
   },
   Mutation: {
-    addBook: async (root, args, context) => {
-      if (!context.currentUser) throw new Error('Authorization token missing or invalid!')
+    addBook: async (root, args, { currentUser }) => {
+      if (!currentUser) throw new AuthenticationError('Not authenticated')
       try {
         let author = await Author.findOne({ name: args.author })
         if (!author) {
@@ -112,8 +112,8 @@ const resolvers = {
         })
       }
     },
-    editAuthor: async (root, args, context) => {
-      if (!context.currentUser) throw new Error('Authorization token missing or invalid!')
+    editAuthor: async (root, args, { currentUser }) => {
+      if (!currentUser) throw new AuthenticationError('Not authenticated')
       try {
         let author = await Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo })
         if (!author) return new Error('Author not found')
