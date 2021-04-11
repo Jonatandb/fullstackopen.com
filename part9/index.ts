@@ -1,5 +1,5 @@
 import express from 'express';
-import calculateBmi from './bmiCalculator'
+import calculateBmi from './bmiCalculator';
 
 const app = express();
 
@@ -10,11 +10,11 @@ app.get('/hello', (_req, res) => {
 app.get('/bmi', (_req, res) => {
   const { height: heightParam, weight: weightParam } = _req.query;
 
-  if(!heightParam) res.status(500).send({ error: 'Missing height param'})
-  if(isNaN(Number(heightParam))) res.status(500).send({ error: 'Invalid height value, it must be a number'})
+  if(!heightParam) res.status(500).send({ error: 'Missing height param'});
+  if(isNaN(Number(heightParam))) res.status(500).send({ error: 'Invalid height value, it must be a number'});
 
-  if(!weightParam) res.status(500).send({ error: 'Missing weight param'})
-  if(isNaN(Number(weightParam))) res.status(500).send({ error: 'Invalid weight value, it must be a number'})
+  if(!weightParam) res.status(500).send({ error: 'Missing weight param'});
+  if(isNaN(Number(weightParam))) res.status(500).send({ error: 'Invalid weight value, it must be a number'});
 
   const height = Number(heightParam);
   const weight = Number(weightParam);
