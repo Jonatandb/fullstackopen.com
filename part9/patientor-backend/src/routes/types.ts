@@ -16,3 +16,9 @@ export interface IPatient {
 export type NonSensitivePatinent = Omit<IPatient, 'ssn'>;
 
 export type NewPatinent = Omit<IPatient, 'id'>;
+
+export enum Gender {
+  Male = 'male',
+  Female = 'female',
+  Other = 'other'
+}
