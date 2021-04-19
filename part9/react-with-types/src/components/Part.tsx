@@ -18,26 +18,31 @@ const Part = ({ part }: PartProps): JSX.Element => {
   switch (part.name) {
     case "Fundamentals":
       return (
-        <p>
-          {part.name} {part.description} {part.exerciseCount}
-        </p>
+          <p>
+            <strong>{part.name} {part.exerciseCount}</strong><br/>
+            <i>{part.description}</i>
+          </p>
       )
     case "Using props to pass data":
       return (
         <p>
-          {part.name} {part.description} {part.exerciseCount} {part.groupProjectCount}
+          <strong>{part.name} {part.exerciseCount}</strong><br/>
+          Project exercices {part.groupProjectCount}
         </p>
       )
     case "Deeper type usage":
       return (
         <p>
-          {part.name} {part.description} {part.exerciseCount} {part.exerciseSubmissionLink}
+          <strong>{part.name} {part.exerciseCount}</strong><br/>
+          <i>{part.description}</i><br/>
+          Submit to {part.exerciseSubmissionLink}
         </p>
       )
     case "Typescript essentilas v2":
       return (
         <p>
-          {part.name} {part.description} {part.exerciseCount}
+          <strong>{part.name} {part.exerciseCount}</strong><br/>
+          <i>{part.description}</i>
         </p>
       )
     default:
