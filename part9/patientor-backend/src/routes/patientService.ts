@@ -8,15 +8,22 @@ const getpatients = (): Array<NonSensitivePatinent> => {
     name,
     dateOfBirth,
     gender,
-    occupation
+    occupation,
+    entries
   }) => ({
       id,
       name,
       dateOfBirth,
       gender,
-      occupation
+      occupation,
+      entries
     })
   );
+};
+
+const getpatient = (id: string): IPatient => {
+  const patient: IPatient = patientsData.filter(({id: patientId}) => patientId === id)[0];
+  return patient;
 };
 
 const addPatient = (patient: NewPatinent): IPatient => {
@@ -31,5 +38,6 @@ const addPatient = (patient: NewPatinent): IPatient => {
 
 export default {
   getpatients,
-  addPatient
+  addPatient,
+  getpatient
 };

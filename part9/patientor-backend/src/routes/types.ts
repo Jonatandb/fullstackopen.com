@@ -3,7 +3,6 @@ export interface IDiagnose {
   name: string
   latin?: string
 }
-
 export interface IPatient {
     id: string
     name: string
@@ -11,6 +10,7 @@ export interface IPatient {
     ssn: string
     gender: string
     occupation: string
+    entries: IEntry[]
 }
 
 export type NonSensitivePatinent = Omit<IPatient, 'ssn'>;
@@ -22,3 +22,9 @@ export enum Gender {
   Female = 'female',
   Other = 'other'
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface IEntry {
+}
+
+export type PublicPatient = Omit<IPatient, 'ssn' | 'entries'>;
